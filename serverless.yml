@@ -1,0 +1,48 @@
+service: lambda-local-development
+
+useDotenv: true
+
+plugins:
+    - serverless-offline
+
+provider:
+    name: aws
+    runtime: nodejs14.x
+    lambdaHashingVersion: 20201221
+
+functions:
+  insert:
+    handler: src/server.ins
+    events:
+      - http:
+          path: /api/insert
+          method: post
+          cors: true
+  update:
+    handler: src/server.upd
+    events:
+      - http:
+          path: /api/update
+          method: put
+          cors: true
+  delete:
+    handler: src/server.del
+    events:
+      - http:
+          path: /api/delete
+          method: delete
+          cors: true
+  select:
+    handler: src/server.sel
+    events:
+      - http:
+          path: /api/select
+          method: post
+          cors: true
+  dbtest:
+    handler: src/server.dbtest
+    events:
+      - http:
+          path: /api/dbtest
+          method: get
+          cors: true

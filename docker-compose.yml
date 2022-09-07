@@ -1,0 +1,32 @@
+version: "3.1"
+
+services:
+  localstack:
+    image: localstack/localstack:latest
+    container_name: localstack
+    environment:
+      - AWS_DEFAULT_REGION=us-east-1
+      - EDGE_PORT=4566
+      - SERVICES=lambda,s3,cloudformation,sts,apigateway,iam,route53
+      - EXTRA_CORS_ALLOWED_HEADERS=X-Referer, x-referer, Autorization, Origin, origin, X-Requested-With, X-Csrftoken, Content-Type, Accept, sec-ch-ua, sec-ch-ua-mobile, User-Agent
+    ports:
+      - "4566-4597:4566-4597"
+    volumes:
+      - "${TEMPDIR:-/tmp/localstack}:/temp/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    depends_on:
+        - mysql
+
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: myapp
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      TZ: 'Asia/Tokyo'
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - ./docker/db/data:/var/lib/mysql
+    ports:
+      - 3307:3306
